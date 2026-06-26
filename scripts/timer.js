@@ -1,0 +1,75 @@
+let hour = document.querySelector('#hours');
+let minute = document.querySelector('#minutes');
+let second = document.querySelector('#seconds');
+
+let isPaused = false;
+let timer;
+
+let hours = Number(hour.value);
+let minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60;
+let seconds = Number(second.value) > 59 ? 59 : Number(second.value) % 60;
+
+function startTimer() {
+    timer = setInterval(() => {updateTimer()}, 1000);
+}
+
+function timerFormat(h, m, s) {
+    h = String(h).padStart(2, '0');
+    m = String(m).padStart(2, '0');
+    s = String(s).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+}
+
+function updateTimer() {
+    const timerElement = document.querySelector('#timer-container');
+    timerElement.innerHTML = `<p>${timerFormat(hours, minutes, seconds)}</p>`;
+
+    if (hours > 0 && !isPaused && minutes === 0 && seconds === 0) {
+        hours --;
+        minutes = 59;
+        seconds = 59;
+    } else if (!isPaused && minutes > 0 && seconds === 0) {
+        minutes--;
+        seconds = 59;
+    } else if (!isPaused && seconds > 0) {
+        seconds --;
+    } else if (hours === 0 && minutes === 0 && seconds === 0) {
+        clearInterval(timer);
+        timerElement.innerHTML += `<p>Time's up!</p>`;
+    }
+}
+
+function toggleTimerButton() {
+    const toggleButton = document.querySelector('#timer-btn');
+    isPaused = !isPaused;
+
+    if (isPaused) {
+        clearInterval(timer);
+        toggleButton.innerText = 'Resume';
+    } else if (isPaused && toggleButton.innerText === 'Start') {
+        startTimer();
+        toggleButton.innerText = 'Pause';
+    }
+}
+
+function restartTimer() {
+    clearInterval(timer);
+    isPaused = true;
+    const timerElement = document.querySelector('#timer-container');
+    timerElement.innerHTML = `<input placeholder="0" id="hours">
+            <span>:</span>
+            <input placeholder="0" id="minutes">
+            <span>:</span>
+            <input placeholder="0" id="seconds">
+            <div class="timer-labels">
+                <span>hours</span>
+                <span>minutes</span>
+                <span>seconds</span>`;
+    clearInterval(timer);
+    const toggleButton = document.querySelector('#timer-btn');
+    toggleButton.innerText = 'Start';
+}
+
+// function inputTime() {
+    
+// }

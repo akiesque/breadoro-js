@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Breadoro</title>
+    <style rel="stylesheet" href="styles\styles.css"></style>
+</head>
+<body>
+   <div class="main">
+    <div class="timer-box">
+        <h1>Breadoro</h1>
+        <p>I want to work for...</p>
+        <div class="timer" id="timer-container"> <!--Add a  querySelector here that replaces this div with the time inputted.-->
+            <input placeholder="0" id="hours">
+            <span>:</span>
+            <input placeholder="0" id="minutes">
+            <span>:</span>
+            <input placeholder="0" id="seconds">
+            <div class="timer-labels">
+                <span>hours</span>
+                <span>minutes</span>
+                <span>seconds</span>
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="timer-btn" onclick="startTimer();">Start</button>
+            <!-- <button id="pause-btn" onclick="toggleTimerButton();">Pause</button> -->
+            <button id="reset-btn" onclick="restartTimer();">Reset</button>
+        </div>
+    </div>
+
+   </div>
+
+   <script src="scripts/timer.js"></script>
+</body>
+</html>
