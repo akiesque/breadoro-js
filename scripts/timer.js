@@ -46,22 +46,27 @@ function updateTimer() {
         seconds = 59;
     } else if (!isPaused && seconds > 0) {
         seconds --;
-    } else if (hours === 0 && minutes === 0 && seconds === 0 && sessions.value > 0) {
-        sessions.value--;
+    } else if (hours === 0 && minutes === 0 && seconds === 0) {
+        if (!breakTime) {
         breakTime = true;
-        if (breakTime) {
         breakValue = Number(breaks.value);
         minutes = breakValue > 59 ? 59 : breakValue % 60;
         timerElement.innerHTML = `<p>${timerFormat(hours, minutes, seconds)}</p>`;
-        notify.innerHTML = "Break time!";
-        if (minutes === 0 && breakTime === true) {
+        notify.innerHTML = "Session complete! Let's have a break.";
+        } else {
             breakTime = false;
-            notify.innerHTML = `<p>Break complete!</p>`;
-    }
-}
-    } else {
-        clearInterval(timer);
-        notify.innerHTML += `<p>Session complete!</p>`;
+            if (sessions.value === 0) {
+                clearInterval(timer);
+                notify.innerHTML = "All sessions complete! Good job!";
+            } else {
+            sessions.value > 0 ? sessions.value-- : 0;
+            hours = Number(hour.value);
+            minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60;
+            seconds = Number(second.value) > 59 ? 59 : Number(second.value) % 60;
+            timerElement.innerHTML = `<p>${timerFormat(hours, minutes, seconds)}</p>`;
+            notify.innerHTML = "Break complete! Let's start the next session.";
+            }   
+        }
     }
 }
 
@@ -99,11 +104,4 @@ function restartTimer() {
     clearInterval(timer);
     const toggleButton = document.querySelector('#timer-btn');
     toggleButton.innerText = 'Start';
-}
-
-function checkSessions() {
-    if (hours === 0 && minutes === 0 && seconds === 0 && sessions.value > 0) {
-        sessions.value--;
-        startTimer();
-    }
 }
