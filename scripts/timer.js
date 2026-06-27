@@ -1,15 +1,19 @@
-let hour = document.querySelector('#hours');
-let minute = document.querySelector('#minutes');
-let second = document.querySelector('#seconds');
-
 let isPaused = false;
 let timer;
 
-let hours = Number(hour.value);
-let minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60;
-let seconds = Number(second.value) > 59 ? 59 : Number(second.value) % 60;
+let hour, minute, second;
+let hours, minutes, seconds;
 
 function startTimer() {
+    isPaused = false;
+    hour = document.querySelector('#hours');
+    minute = document.querySelector('#minutes');
+    second = document.querySelector('#seconds');
+
+    hours = Number(hour.value);
+    minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60;
+    seconds = Number(second.value) > 59 ? 59 : Number(second.value) % 60;
+
     timer = setInterval(() => {updateTimer()}, 1000);
 }
 
@@ -43,12 +47,12 @@ function toggleTimerButton() {
     const toggleButton = document.querySelector('#timer-btn');
     isPaused = !isPaused;
 
-    if (isPaused) {
-        clearInterval(timer);
-        toggleButton.innerText = 'Resume';
-    } else if (isPaused && toggleButton.innerText === 'Start') {
+    if (isPaused && toggleButton.innerText === 'Start') {
         startTimer();
         toggleButton.innerText = 'Pause';
+    } else if (isPaused) {
+        clearInterval(timer);
+        toggleButton.innerText = 'Resume';
     }
 }
 
@@ -65,6 +69,10 @@ function restartTimer() {
                 <span>hours</span>
                 <span>minutes</span>
                 <span>seconds</span>`;
+    let newHours = document.querySelector('#hours').value;
+    let newMinutes = document.querySelector('#minutes').value;
+    let newSeconds = document.querySelector('#seconds').value;
+    timerFormat(newHours, newMinutes, newSeconds);
     clearInterval(timer);
     const toggleButton = document.querySelector('#timer-btn');
     toggleButton.innerText = 'Start';
