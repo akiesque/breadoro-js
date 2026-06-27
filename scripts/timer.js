@@ -1,14 +1,23 @@
 let isPaused = false;
+let breakTime = false;
 let timer;
+
 
 let hour, minute, second;
 let hours, minutes, seconds;
 
+let sessions, breaks;
+let notify;
+
 function startTimer() {
     isPaused = false;
+    notify = document.querySelector('.notify-text');
     hour = document.querySelector('#hours');
     minute = document.querySelector('#minutes');
     second = document.querySelector('#seconds');
+
+    sessions = document.querySelector('#sessions');
+    breaks = document.querySelector('#breaks');
 
     hours = Number(hour.value);
     minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60;
@@ -37,9 +46,22 @@ function updateTimer() {
         seconds = 59;
     } else if (!isPaused && seconds > 0) {
         seconds --;
-    } else if (hours === 0 && minutes === 0 && seconds === 0) {
+    } else if (hours === 0 && minutes === 0 && seconds === 0 && sessions.value > 0) {
+        sessions.value--;
+        breakTime = true;
+        if (breakTime) {
+        breakValue = Number(breaks.value);
+        minutes = breakValue > 59 ? 59 : breakValue % 60;
+        timerElement.innerHTML = `<p>${timerFormat(hours, minutes, seconds)}</p>`;
+        notify.innerHTML = "Break time!";
+        if (minutes === 0 && breakTime === true) {
+            breakTime = false;
+            notify.innerHTML = `<p>Break complete!</p>`;
+    }
+}
+    } else {
         clearInterval(timer);
-        timerElement.innerHTML += `<p>Time's up!</p>`;
+        notify.innerHTML += `<p>Session complete!</p>`;
     }
 }
 
@@ -59,6 +81,7 @@ function toggleTimerButton() {
 function restartTimer() {
     clearInterval(timer);
     isPaused = true;
+    notify.innerHTML = '';
     const timerElement = document.querySelector('#timer-container');
     timerElement.innerHTML = `<input placeholder="0" id="hours">
             <span>:</span>
@@ -78,6 +101,9 @@ function restartTimer() {
     toggleButton.innerText = 'Start';
 }
 
-// function inputTime() {
-    
-// }
+function checkSessions() {
+    if (hours === 0 && minutes === 0 && seconds === 0 && sessions.value > 0) {
+        sessions.value--;
+        startTimer();
+    }
+}

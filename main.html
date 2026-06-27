@@ -16,12 +16,30 @@
             <input placeholder="0" id="minutes">
             <span>:</span>
             <input placeholder="0" id="seconds">
+        </div>
+                <p class="notify-text"></p>
+
             <div class="timer-labels">
                 <span>hours</span>
                 <span>minutes</span>
                 <span>seconds</span>
             </div>
+            
+            <div class="settings-container">
+
+                <div class="tooltip-session">
+                <span>Sessions</span>
+                <input id="sessions" placeholder="0">
+                <span class="tooltip-text">Number of sessions you want to complete.</span>
+                </div>
+
+                <div class="tooltip-break">
+                <span>Breaks</span>
+                <input id="breaks" placeholder="0">
+                <span class="tooltip-text">How long you want to take your break (in minutes).</span>
+            </div>
         </div>
+
         <div class="buttons">
             <button id="timer-btn" onclick="startTimer();">Start</button>
             <!-- <button id="pause-btn" onclick="toggleTimerButton();">Pause</button> -->
