@@ -3,67 +3,70 @@ let breakTime = false;
 let timer;
 
 
-let hour, minute, second;
-let hours, minutes, seconds;
+let minute, second;
+let minutes, seconds;
 
-let sessions, breaks;
+let sessions, breaks, settings;
 let notify;
 
 function startTimer() {
     isPaused = false;
+    const timerContainer = document.querySelector('.timer-container');
     notify = document.querySelector('.notify-text');
-    hour = document.querySelector('#hours');
     minute = document.querySelector('#minutes');
     second = document.querySelector('#seconds');
+    settings = document.querySelector('.settings-container');
 
-    sessions = document.querySelector('#sessions');
-    breaks = document.querySelector('#breaks');
+    sessions = Number(document.querySelector('#sessions').value) || 4;
+    breaks = Number(document.querySelector('#breaks').value) || 5;
 
-    hours = Number(hour.value);
     minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60;
     seconds = Number(second.value) > 59 ? 59 : Number(second.value) % 60;
+    
+    document.querySelector('.input-container').classList.add('hidden');
+    document.querySelector('.settings-container').classList.add('hidden');
+    document.querySelector('.timer-container').classList.remove('hidden');
+    timerContainer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
 
+    updateTimer();
     timer = setInterval(() => {updateTimer()}, 1000);
+    displaySettings();
 }
 
-function timerFormat(h, m, s) {
-    h = String(h).padStart(2, '0');
+function timerFormat(m, s) {
     m = String(m).padStart(2, '0');
     s = String(s).padStart(2, '0');
-    return `${h}:${m}:${s}`;
+    return `${m}:${s}`;
 }
 
 function updateTimer() {
-    const timerElement = document.querySelector('#timer-container');
-    timerElement.innerHTML = `<p>${timerFormat(hours, minutes, seconds)}</p>`;
+    const timerContainer = document.querySelector('.timer-container');
+    timerContainer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
 
-    if (hours > 0 && !isPaused && minutes === 0 && seconds === 0) {
-        hours --;
-        minutes = 59;
-        seconds = 59;
-    } else if (!isPaused && minutes > 0 && seconds === 0) {
+    if (minutes > 0 && seconds === 0) {
         minutes--;
         seconds = 59;
-    } else if (!isPaused && seconds > 0) {
+    } else if (seconds > 0) {
         seconds --;
-    } else if (hours === 0 && minutes === 0 && seconds === 0) {
+    } else if (minutes === 0 && seconds === 0) {
+        displaySettings();
         if (!breakTime) {
-        breakTime = true;
-        breakValue = Number(breaks.value);
-        minutes = breakValue > 59 ? 59 : breakValue % 60;
-        timerElement.innerHTML = `<p>${timerFormat(hours, minutes, seconds)}</p>`;
+        sessions > 0 ? sessions-- : 0;
+        displaySettings();
         notify.innerHTML = "Session complete! Let's have a break.";
+        breakTime = true;
+        minutes = breaks > 59 ? 59 : breaks % 60;
+        seconds = 0;
+        timerContainer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
         } else {
             breakTime = false;
-            if (sessions.value === 0) {
+            if (sessions === 0) {
                 clearInterval(timer);
                 notify.innerHTML = "All sessions complete! Good job!";
             } else {
-            sessions.value > 0 ? sessions.value-- : 0;
-            hours = Number(hour.value);
             minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60;
             seconds = Number(second.value) > 59 ? 59 : Number(second.value) % 60;
-            timerElement.innerHTML = `<p>${timerFormat(hours, minutes, seconds)}</p>`;
+            timerContainer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
             notify.innerHTML = "Break complete! Let's start the next session.";
             }   
         }
@@ -71,37 +74,44 @@ function updateTimer() {
 }
 
 function toggleTimerButton() {
-    const toggleButton = document.querySelector('#timer-btn');
-    isPaused = !isPaused;
+    const toggleButton = document.querySelector('.timer-btn');
 
-    if (isPaused && toggleButton.innerText === 'Start') {
+
+    if (toggleButton.innerText === 'Start') {  
         startTimer();
         toggleButton.innerText = 'Pause';
-    } else if (isPaused) {
+    } else if (toggleButton.innerText === 'Pause') {
         clearInterval(timer);
+        isPaused = true;
         toggleButton.innerText = 'Resume';
-    }
+    } else if (toggleButton.innerText === 'Resume') {
+        timer = setInterval(() => {updateTimer()}, 1000);
+        isPaused = false;
+        toggleButton.innerText = 'Pause';
+    }   
 }
 
 function restartTimer() {
     clearInterval(timer);
+    document.querySelector('.input-container').classList.remove('hidden');
+    document.querySelector('.settings-container').classList.remove('hidden');
+    document.querySelector('.settings-display').classList.add('hidden');
+    document.querySelector('.timer-container').classList.add('hidden');
+    minutes = 0;
+    seconds = 0;
+    sessions = 0;
+    breaks = 0;
+    breakTime = false;
     isPaused = true;
     notify.innerHTML = '';
-    const timerElement = document.querySelector('#timer-container');
-    timerElement.innerHTML = `<input placeholder="0" id="hours">
-            <span>:</span>
-            <input placeholder="0" id="minutes">
-            <span>:</span>
-            <input placeholder="0" id="seconds">
-            <div class="timer-labels">
-                <span>hours</span>
-                <span>minutes</span>
-                <span>seconds</span>`;
-    let newHours = document.querySelector('#hours').value;
-    let newMinutes = document.querySelector('#minutes').value;
-    let newSeconds = document.querySelector('#seconds').value;
-    timerFormat(newHours, newMinutes, newSeconds);
-    clearInterval(timer);
-    const toggleButton = document.querySelector('#timer-btn');
+    const toggleButton = document.querySelector('.timer-btn');
     toggleButton.innerText = 'Start';
+}
+
+function displaySettings() {
+    document.querySelector('.settings-display').classList.remove('hidden');
+    const displaySessions = document.querySelector('#display-sessions');
+    const displayBreaks = document.querySelector('#display-breaks');
+    displaySessions.innerHTML = `Sessions: ${sessions}`;
+    displayBreaks.innerHTML = `Breaks: ${breaks}`;
 }

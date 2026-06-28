@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Breadoro</title>
-    <style rel="stylesheet" href="styles\styles.css"></style>
+    <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
    <div class="main">
     <div class="timer-box">
         <h1>Breadoro</h1>
         <p>I want to work for...</p>
-        <div class="timer" id="timer-container"> <!--Add a  querySelector here that replaces this div with the time inputted.-->
-            <input placeholder="0" id="hours">
-            <span>:</span>
-            <input placeholder="0" id="minutes">
+        <div class="input-container">
+            <input placeholder="25" id="minutes">
             <span>:</span>
             <input placeholder="0" id="seconds">
         </div>
-                <p class="notify-text"></p>
-
+        <div class="timer-container hidden">
+           
+        </div>
+         <p class="notify-text"></p>
             <div class="timer-labels">
-                <span>hours</span>
                 <span>minutes</span>
                 <span>seconds</span>
             </div>
@@ -29,19 +28,24 @@
 
                 <div class="tooltip-session">
                 <span>Sessions</span>
-                <input id="sessions" placeholder="0">
+                <input id="sessions" placeholder="4">
                 <span class="tooltip-text">Number of sessions you want to complete.</span>
                 </div>
 
                 <div class="tooltip-break">
                 <span>Breaks</span>
-                <input id="breaks" placeholder="0">
+                <input id="breaks" placeholder="5">
                 <span class="tooltip-text">How long you want to take your break (in minutes).</span>
             </div>
         </div>
 
+        <div class="settings-display hidden">
+                <p id="display-sessions">Sessions:</p>
+                <p id="display-breaks">Breaks:</p>
+            </div>
+
         <div class="buttons">
-            <button id="timer-btn" onclick="startTimer();">Start</button>
+            <button class="timer-btn" onclick="toggleTimerButton();">Start</button>
             <!-- <button id="pause-btn" onclick="toggleTimerButton();">Pause</button> -->
             <button id="reset-btn" onclick="restartTimer();">Reset</button>
         </div>
