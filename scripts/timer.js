@@ -20,8 +20,8 @@ function startTimer() {
     sessions = Number(document.querySelector('#sessions').value) || 4;
     breaks = Number(document.querySelector('#breaks').value) || 5;
 
-    minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60;
     seconds = Number(second.value) > 59 ? 59 : Number(second.value) % 60;
+     minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60 || seconds > 0 ? 0 : 25;
     
     document.querySelector('.input-container').classList.add('hidden');
     document.querySelector('.settings-container').classList.add('hidden');
@@ -44,6 +44,9 @@ function updateTimer() {
     timerContainer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
 
     if (minutes > 0 && seconds === 0) {
+        if (breakTime) {
+            notify.innerHTML = "Let's take a break."
+        }
         minutes--;
         seconds = 59;
     } else if (seconds > 0) {
@@ -51,15 +54,15 @@ function updateTimer() {
     } else if (minutes === 0 && seconds === 0) {
         displaySettings();
         if (!breakTime) {
-        sessions > 0 ? sessions-- : 0;
-        displaySettings();
-        notify.innerHTML = "Session complete! Let's have a break.";
         breakTime = true;
         minutes = breaks > 59 ? 59 : breaks % 60;
         seconds = 0;
-        timerContainer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
+        notify.innerHTML = "Session complete!"
+        // timerContainer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
         } else {
             breakTime = false;
+
+            sessions > 0 ? sessions-- : 0;
             if (sessions === 0) {
                 clearInterval(timer);
                 notify.innerHTML = "All sessions complete! Good job!";
