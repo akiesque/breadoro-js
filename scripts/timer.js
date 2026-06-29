@@ -4,11 +4,13 @@ let timer;
 let pomoTimer;
 
 
-let minute;
+let minute, min;
 let minutes;
 
 let sessions, breaks, settings, sessionsDone;
 let notify;
+
+const settingsBtn = document.querySelector('#settings-btn');
 
 function startTimer() {
     isPaused = false;
@@ -17,6 +19,8 @@ function startTimer() {
     minute = document.querySelector('#minutes');
     settings = document.querySelector('.settings-container');
 
+    min = Number(document.querySelector('#minutes').value)
+
     sessions = Number(document.querySelector('#sessions').value) || 4;
     breaks = Number(document.querySelector('#breaks').value) || 5;
 
@@ -24,7 +28,10 @@ function startTimer() {
     minutes = Number(minute.value) > 59 ? 59 : Number(minute.value) % 60 || 25;
     
     document.querySelector('.settings-container').classList.add('hidden');
-    pomoTimer.innerHTML = `<p>${timerFormat(minutes)}</p>`;
+    document.querySelector('.settings-display').classList.add('hidden');
+
+    pomoTimer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
+    settingsBtn.disabled = true;
 
     updateTimer();
     timer = setInterval(() => {updateTimer()}, 1000);
@@ -80,7 +87,6 @@ function updateTimer() {
 function toggleTimerButton() {
     const toggleButton = document.querySelector('.timer-btn');
 
-
     if (toggleButton.innerText === 'Start') {  
         startTimer();
         toggleButton.innerText = 'Pause';
@@ -99,13 +105,15 @@ function restartTimer() {
     clearInterval(timer);
     document.querySelector('.settings-container').classList.remove('hidden');
     document.querySelector('.settings-display').classList.add('hidden');
-    minutes = 0;
+    minutes = min == '' ? 25 : min;
     seconds = 0;
     sessions = 0;
     breaks = 0;
     breakTime = false;
     isPaused = true;
+    settingsBtn.disabled = false;
     notify.innerHTML = '';
+    pomoTimer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
     const toggleButton = document.querySelector('.timer-btn');
     toggleButton.innerText = 'Start';
 }
@@ -126,7 +134,6 @@ function openSettings() {
 function closeSettings() {
     const settingsScreen = document.querySelector('#settings-screen');
     settingsScreen.classList.add('hidden');
-    const min = Number(document.querySelector('#minutes').value)
     minutes = min;
     seconds = 0;
     document.querySelector('.pomo-time').innerHTML = `${timerFormat(minutes, seconds)}`;
