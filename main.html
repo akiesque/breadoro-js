@@ -3,26 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Breadoro</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles\styles.css">
 </head>
 <body>
    <div class="main">
     <div class="timer-box">
         <h1>Breadoro</h1>
         <p>I want to work for...</p>
-        <div class="input-container">
-            <input placeholder="25" id="minutes">
-            <span>:</span>
-            <input placeholder="0" id="seconds">
-        </div>
-        <div class="timer-container hidden">
-           
-        </div>
-         <p class="notify-text"></p>
-            <div class="timer-labels">
-                <span>minutes</span>
-                <span>seconds</span>
+         <div class="grid-container">
+            <div class="pomodoro-timer">
+                <p class="pomo-time">25:00</p>
             </div>
+            <div class="timer-container hidden">
+            
+            </div>
+            <p class="notify-text"></p>
+        </div>
             
             <div class="settings-container">
 
@@ -39,15 +35,23 @@
             </div>
         </div>
 
-        <div class="settings-display hidden">
+        <div class="settings-display">
                 <p id="display-sessions">Sessions:</p>
                 <p id="display-breaks">Breaks:</p>
             </div>
 
         <div class="buttons">
             <button class="timer-btn" onclick="toggleTimerButton();">Start</button>
-            <!-- <button id="pause-btn" onclick="toggleTimerButton();">Pause</button> -->
             <button id="reset-btn" onclick="restartTimer();">Reset</button>
+            <button id="settings-btn" onclick="openSettings();">Settings</button>
+        </div>
+
+        <div id="settings-screen" class="modal hidden">
+            <div class="modal-content">
+                <p class = "settings-title">Settings</p>
+                <input type="number" id="minutes" placeholder="25">
+                <button class="close" onclick="closeSettings();">&times;</button>
+            </div>
         </div>
     </div>
 
