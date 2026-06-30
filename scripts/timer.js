@@ -5,7 +5,7 @@ let pomoTimer;
 
 
 let minute, min;
-let minutes;
+let minutes, seconds;
 
 let sessions, breaks, settings, sessionsDone;
 let notify;
@@ -45,6 +45,7 @@ function timerFormat(m, s) {
 }
 
 function updateTimer() {
+    breadGet();
     const pomoTimer = document.querySelector('.pomo-time');
     pomoTimer.innerHTML = `${timerFormat(minutes, seconds)}`;
 
@@ -75,7 +76,7 @@ function updateTimer() {
                 if (sessions > 0 &&sessionsDone === 4) {
                     minutes = breaks === 5 ? 30 : breaks + minutes;
                     seconds = Number(second.value) > 59 ? 59 : Number(second.value) % 60;
-                    timerContainer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
+                    pomoTimer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
                     notify.innerHTML = "Break complete! Let's start the next session.";
                 }
             
@@ -105,7 +106,8 @@ function restartTimer() {
     clearInterval(timer);
     document.querySelector('.settings-container').classList.remove('hidden');
     document.querySelector('.settings-display').classList.add('hidden');
-    minutes = min == '' ? 25 : min;
+    const minute = document.querySelector('#minutes');
+    minutes = Number(minute.value) || 25;
     seconds = 0;
     sessions = 0;
     breaks = 0;
@@ -134,7 +136,14 @@ function openSettings() {
 function closeSettings() {
     const settingsScreen = document.querySelector('#settings-screen');
     settingsScreen.classList.add('hidden');
-    minutes = min;
+    const minute = document.querySelector('#minutes');
+    minutes = Number(minute.value) || 25;
     seconds = 0;
     document.querySelector('.pomo-time').innerHTML = `${timerFormat(minutes, seconds)}`;
+}
+
+function breadGet() {
+    if (sessions >= 2 && minutes === 25) {
+        document.querySelector('.bread-alert')
+    }
 }
