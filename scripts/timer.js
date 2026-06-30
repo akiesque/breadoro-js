@@ -36,6 +36,7 @@ function startTimer() {
     updateTimer();
     timer = setInterval(() => {updateTimer()}, 1000);
     displaySettings();
+    breadGet();
 }
 
 function timerFormat(m, s) {
@@ -45,7 +46,6 @@ function timerFormat(m, s) {
 }
 
 function updateTimer() {
-    breadGet();
     const pomoTimer = document.querySelector('.pomo-time');
     pomoTimer.innerHTML = `${timerFormat(minutes, seconds)}`;
 
@@ -115,9 +115,13 @@ function restartTimer() {
     isPaused = true;
     settingsBtn.disabled = false;
     notify.innerHTML = '';
+    breadGet();
     pomoTimer.innerHTML = `<p>${timerFormat(minutes, seconds)}</p>`;
     const toggleButton = document.querySelector('.timer-btn');
     toggleButton.innerText = 'Start';
+
+    const alertElement = document.getElementById('bread-notif');
+    if (alertElement) alertElement.classList.remove('show');
 }
 
 function displaySettings() {
@@ -139,11 +143,26 @@ function closeSettings() {
     const minute = document.querySelector('#minutes');
     minutes = Number(minute.value) || 25;
     seconds = 0;
+    breadGet();
     document.querySelector('.pomo-time').innerHTML = `${timerFormat(minutes, seconds)}`;
 }
 
 function breadGet() {
-    if (sessions >= 2 && minutes === 25) {
-        document.querySelector('.bread-alert')
+    const alertElement = document.getElementById('bread-notif');
+    if (!alertElement) return; 
+
+    const currentSessions = Number(document.querySelector('#sessions').value) || 4;
+    const currentMinutes = Number(document.querySelector('#minutes').value) || 25;
+
+    if (currentSessions >= 2 && currentMinutes >= 25) {
+        alertElement.classList.add('show');
+
+        setTimeout(() => {
+            alertElement.classList.remove('show');
+        }, 3000); 
+    } else {
+        alertElement.classList.remove('show');
     }
 }
+
+
